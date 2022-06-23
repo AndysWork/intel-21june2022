@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - name: Clone the Code
-      - uses: actions/checkout@v3
+        uses: actions/checkout@v3
 
       - name: Verify the Code is Cloned
         run: ls -la
