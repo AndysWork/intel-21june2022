@@ -45,7 +45,7 @@ jobs:
       #     key: ${{ secrets.KEY }}
       #     script: sudo mv myapp/* /var/www/html
       - name: Copy & Deploy
-        uses: mdallasanta/ssh-scp-deploy@{version}
+        uses: mdallasanta/ssh-scp-deploy@v1.2.0
         with:
           local: 'myapp'                                                  # Local file path - REQUIRED false - DEFAULT ./
           remote: '/home/${{secrets.USER}}'                                                 # Remote file path - REQUIRED false - DEFAULT ~/
