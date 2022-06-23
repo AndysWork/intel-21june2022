@@ -13,12 +13,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       name: Build Job
-      echo: Completed Build Job
+      run: echo Completed Build Job
   test:
     runs-on: ubuntu-latest
     steps:
       name: Test Job
-      echo: Completed Test Job
+      run: echo Completed Test Job
   deployment:
     runs-on: ubuntu-latest
     steps:
