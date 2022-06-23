@@ -78,7 +78,7 @@ jobs:
       - name: Copy & Deploy
         uses: mdallasanta/ssh-scp-deploy@v1.2.0
         with:
-          local: 'myapp-package'                                                  # Local file path - REQUIRED false - DEFAULT ./
+          local: 'myapp'                                                  # Local file path - REQUIRED false - DEFAULT ./
           remote: '/home/${{secrets.USER}}'                                                 # Remote file path - REQUIRED false - DEFAULT ~/
           host: ${{secrets.HOST}}                                      # Remote server address - REQUIRED true
           user: ${{secrets.USER}}                                      # Remote server user - REQUIRED true                          # User password - REQUIRED at least one of "password" or "key" 
