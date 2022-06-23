@@ -26,24 +26,33 @@ jobs:
     steps:
       - name: Checkout repo
         uses: 'actions/checkout@v3'
-      
-      - name: Verify the code is clonned
-        run: ls -la
 
-      - name: Copy code to the Server
-        uses: easingthemes/ssh-deploy@main
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
-          ARGS: "-rltgoDzvO"
-          SOURCE: "myapp"
-          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
-          REMOTE_USER: ${{ secrets.REMOTE_USER }}
-          TARGET: ${{ secrets.REMOTE_TARGET }}
+      # - name: Copy code to the Server
+      #   uses: easingthemes/ssh-deploy@main
+      #   env:
+      #     SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+      #     ARGS: "-rltgoDzvO"
+      #     SOURCE: "myapp"
+      #     REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+      #     REMOTE_USER: ${{ secrets.REMOTE_USER }}
+      #     TARGET: ${{ secrets.REMOTE_TARGET }}
 
-      - name: Move file in Server
-        uses: appleboy/ssh-action@master
+      # - name: Move file in Server
+      #   uses: appleboy/ssh-action@master
+      #   with:
+      #     host: ${{ secrets.HOST }}
+      #     username: ${{ secrets.USERNAME }}
+      #     key: ${{ secrets.KEY }}
+      #     script: sudo mv myapp/* /var/www/html
+      - name: Copy & Deploy
+        uses: mdallasanta/ssh-scp-deploy@{version}
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
-          script: sudo mv myapp/* /var/www/html
+          local: 'myapp'                                                  # Local file path - REQUIRED false - DEFAULT ./
+          remote: '/home/${{secrets.USER}}'                                                 # Remote file path - REQUIRED false - DEFAULT ~/
+          host: ${{secrets.HOST}}                                      # Remote server address - REQUIRED true
+          user: ${{secrets.USER}}                                      # Remote server user - REQUIRED true                          # User password - REQUIRED at least one of "password" or "key" 
+          key: ${{secrets.KEY}}                                        # Remote server private key - REQUIRED at least one of "password" or "key" 
+          pre_upload: echo "Removed Files"  # Command to run via ssh before scp upload - REQUIRED false
+          post_upload: sudo mv myapp/* /var/www/html  # Command to run via ssh after scp upload - REQUIRED false
+          ssh_options: -o StrictHostKeyChecking=no                     # A set of ssh_option separated by -o - REQUIRED false - DEFAULT -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
+          scp_options: -v                                              # Flags to use during scp - REQUIRED false - DEFAULT ''
