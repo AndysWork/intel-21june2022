@@ -9,15 +9,39 @@ on:
   workflow_dispatch:
 
 jobs:
+  diff:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: 'actions/checkout@v3'
+        with:
+          fetch-depth: 0
+      - name: Diff against `main`
+        id: diff
+        uses: 'selfagency/diffmasterflex@v1.0.3'
+        with:
+          ref: 'origin/main'
+
+      - name: Check for changes
+        id: changes
+        if: ${{ steps.diff.outputs.changed == 'true' }}
+        run:
+          DIFF="${{ steps.diff.outputs.diff }}"
   deployment:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repo
+        uses: 'actions/checkout@v3'
+      
+      - name: Verify the code is clonned
+        uses: ls -la
+        
       - name: Copy code to the Server
         uses: easingthemes/ssh-deploy@main
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
           ARGS: "-rltgoDzvO"
-          SOURCE: "myapp"
+          SOURCE: "diff"
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           TARGET: ${{ secrets.REMOTE_TARGET }}
@@ -28,4 +52,4 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
-          script: sudo myapp/* diff /var/www/html/
+          script: sudo mv diff /var/www/html
