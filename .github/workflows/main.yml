@@ -43,6 +43,7 @@ jobs:
   deployment:
     runs-on: ubuntu-latest
     needs: test
+    timeout-minutes: 20
     steps:
       - name: Checkout repo
         uses: 'actions/checkout@v3'
@@ -51,12 +52,12 @@ jobs:
         with:
           name: myapp-package
           path: myapp
-      - name: Verify the downloaded Packages
-        run: |
-          ls -la
-          pwd
-      - name: Cat the file and test for replacement.
-        run: cat myapp/version.html
+      # - name: Verify the downloaded Packages
+      #   run: |
+      #     ls -la
+      #     pwd
+      # - name: Cat the file and test for replacement.
+      #   run: cat myapp/version.html
 
       # - name: Copy code to the Server
       #   uses: easingthemes/ssh-deploy@main
